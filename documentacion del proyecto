@@ -1,0 +1,320 @@
+===============================================================================
+DOCUMENTACIÓN DEL SISTEMA DE ARCHIVOS JERÁRQUICO - DÍA 12
+===============================================================================
+
+FECHA: Diciembre 2024
+AUTORES: [Tu Nombre] y [Nombre Compañero]
+PROFESOR: [Nombre del profesor]
+CURSO: Estructuras de Datos
+
+===============================================================================
+ÍNDICE
+===============================================================================
+
+1. INTRODUCCIÓN
+2. INSTALACIÓN Y EJECUCIÓN
+3. COMANDOS DISPONIBLES
+4. EJEMPLOS DE USO
+5. ESTRUCTURA TÉCNICA
+6. PRUEBAS Y CALIDAD
+7. SOLUCIÓN DE PROBLEMAS
+8. FORMATO DE ARCHIVOS
+
+===============================================================================
+1. INTRODUCCIÓN
+===============================================================================
+
+Sistema de archivos jerárquico implementado en Python como proyecto de
+Estructuras de Datos. Simula un sistema de archivos real con carpetas y
+archivos, incluyendo operaciones básicas, búsqueda, papelera y persistencia.
+
+CARACTERÍSTICAS PRINCIPALES:
+• Árbol general de nodos (carpetas/archivos)
+• Operaciones: crear, mover, renombrar, eliminar
+• Búsqueda con autocompletado mediante Trie
+• Papelera temporal con restauración
+• Persistencia en archivo JSON
+• Interfaz de consola interactiva
+• Pruebas de integración y performance
+
+===============================================================================
+2. INSTALACIÓN Y EJECUCIÓN
+===============================================================================
+
+REQUISITOS:
+• Python 3.8 o superior
+
+EJECUCIÓN:
+1. Guardar el código como `sistema_completo.py`
+2. Abrir terminal en la carpeta del archivo
+3. Ejecutar:
+
+   python sistema_completo.py          # Modo interactivo
+   python sistema_completo.py --test   # Ejecutar pruebas
+   python sistema_completo.py --clean  # Limpiar archivos de prueba
+
+AL INICIAR:
+   ======================================================================
+   SISTEMA DE ARCHIVOS JERÁRQUICO - DÍAS 1-11 COMPLETOS
+   ======================================================================
+   Versión: 1.0 | Papelera temporal activada
+   Escriba 'help' para ver los comandos disponibles
+
+   /root$
+
+===============================================================================
+3. COMANDOS DISPONIBLES
+===============================================================================
+
+CREACIÓN:
+   mkdir <nombre>                Crear carpeta
+   touch <nombre> [contenido]    Crear archivo (contenido opcional)
+
+VISUALIZACIÓN:
+   ls                            Listar contenido simple
+   ls -l                         Listar con detalles (tipo, ID, tamaño)
+   tree                          Mostrar estructura como árbol
+   pwd                           Mostrar ruta actual completa
+
+NAVEGACIÓN:
+   cd <ruta>                     Cambiar directorio
+      cd carpeta                 Entrar a carpeta
+      cd ..                      Subir un nivel
+      cd /                       Ir a la raíz
+
+MODIFICACIÓN:
+   mv <origen> <destino>         Mover nodo a otra carpeta
+   rename <viejo> <nuevo>        Renombrar nodo
+   rm <nombre>                   Eliminar a papelera
+   rm <nombre> -p                Eliminar permanentemente (sin papelera)
+
+PAPELERA:
+   trash                         Mostrar contenido de papelera
+   restore <índice>              Restaurar elemento (índice de 'trash')
+   emptytrash                    Vaciar papelera permanentemente
+
+BÚSQUEDA:
+   search <término>              Buscar nodos que contengan término
+   search <término> --exact      Búsqueda exacta
+   search <término> --type dir   Buscar solo carpetas
+   search <término> --type file  Buscar solo archivos
+   autocomplete <prefijo>        Sugerencias de autocompletado
+   find <nombre>                 Búsqueda exacta por nombre
+
+SISTEMA:
+   export [archivo]              Exportar recorrido en preorden
+   stats                         Mostrar estadísticas del sistema
+   save [archivo]                Guardar sistema en archivo JSON
+   load [archivo]                Cargar sistema desde archivo JSON
+   history [n]                   Ver historial de operaciones
+   log on/off                    Activar/desactivar registro
+   clear                         Limpiar pantalla
+   help [comando]                Mostrar ayuda
+   exit                          Salir del sistema
+
+===============================================================================
+4. EJEMPLOS DE USO
+===============================================================================
+
+EJEMPLO 1: Organizar proyecto universitario
+   /root$ mkdir Universidad
+   /root$ cd Universidad
+   /root/Universidad$ mkdir "Estructuras de Datos"
+   /root/Universidad$ cd "Estructuras de Datos"
+   /root/Universidad/Estructuras de Datos$ touch proyecto.txt "Proyecto de árboles"
+   /root/Universidad/Estructuras de Datos$ mkdir notas
+   /root/Universidad/Estructuras de Datos$ cd /
+   /root$ tree
+
+EJEMPLO 2: Búsqueda y papelera
+   /root$ search docu
+   /root$ touch temporal.txt "Archivo temporal"
+   /root$ rm temporal.txt
+   /root$ trash
+   /root$ restore 0
+   /root$ emptytrash
+
+EJEMPLO 3: Persistencia
+   /root$ mkdir proyecto_importante
+   /root$ cd proyecto_importante
+   /root/proyecto_importante$ touch datos.txt "Información importante"
+   /root/proyecto_importante$ cd /
+   /root$ save backup.json
+   /root$ load backup.json
+
+===============================================================================
+5. ESTRUCTURA TÉCNICA
+===============================================================================
+
+ESTRUCTURAS DE DATOS IMPLEMENTADAS:
+
+1. ÁRBOL GENERAL
+   • Nodo: id, nombre, tipo (carpeta/archivo), contenido, hijos[], padre
+   • Operaciones: insertar, eliminar, buscar, recorrer
+   • Cálculos: altura, tamaño, recorrido preorden
+
+2. TRIE (Autocompletado)
+   • Nodo Trie: hijos{}, fin_de_palabra, ids_nodos[]
+   • Operaciones: insertar, buscar, buscar por prefijo, eliminar
+   • Complejidad: O(k) para búsqueda por prefijo (k = longitud)
+
+3. ÍNDICES DE BÚSQUEDA
+   • Hash map: nombre → conjunto de IDs
+   • Hash map: ID → objeto Nodo
+   • Sincronización automática con el árbol
+
+4. PAPELERA TEMPORAL
+   • Lista de elementos con metadatos
+   • FIFO automático al alcanzar capacidad máxima
+   • Persistencia en archivo trash.json
+
+CLASES PRINCIPALES:
+   • Nodo: Representa carpeta o archivo
+   • SistemaArchivos: Clase principal del sistema
+   • Trie y TrieNode: Para autocompletado
+   • TrashBin y TrashItem: Para papelera
+   • IntegrationTester: Para pruebas automáticas
+
+COMPLEJIDADES:
+   • Crear nodo: O(1)
+   • Buscar por nombre: O(1) con índice hash
+   • Autocompletar: O(k + m) donde k = prefijo, m = resultados
+   • Mover nodo: O(1)
+   • Exportar preorden: O(n) donde n = número de nodos
+
+===============================================================================
+6. PRUEBAS Y CALIDAD
+===============================================================================
+
+PRUEBAS INCLUIDAS:
+
+1. Casos límite:
+   • Nombres especiales (válidos e inválidos)
+   • Rutas profundas (hasta 50 niveles)
+   • Papelera bajo estrés (múltiples operaciones)
+   • Búsqueda en árbol grande
+
+2. Pruebas de performance:
+   • Árbol pequeño (~50 nodos)
+   • Árbol mediano (~200 nodos)
+   • Árbol grande (~500 nodos)
+   • Operaciones individuales
+
+3. Prueba de integración completa
+
+EJECUTAR PRUEBAS:
+   python sistema_completo.py --test
+
+REPORTES GENERADOS:
+   • performance_tests_report.txt - Métricas de tiempo
+   • test_final_report.txt - Resumen de pruebas
+
+COBERTURA:
+   • Operaciones básicas: 100%
+   • Casos límite: cubiertos
+   • Persistencia: guardar/cargar verificado
+   • Papelera: operaciones completas
+
+===============================================================================
+7. SOLUCIÓN DE PROBLEMAS
+===============================================================================
+
+PROBLEMA COMÚN                     SOLUCIÓN
+---------------                   ---------
+"Error: ya existe 'nombre'"       • Usar otro nombre
+                                   • Renombrar el existente primero
+
+"Error: no es una carpeta válida" • Verificar que destino sea carpeta (ls -l)
+                                   • Crear carpeta primero
+
+"No encuentra en búsqueda"        • Usar search en lugar de find
+                                   • Verificar mayúsculas/minúsculas
+                                   • Listar para ver nombres exactos (ls)
+
+"Papelera vacía pero eliminé"     • Se usó -p (eliminación permanente)
+                                   • Papelera se vació automáticamente
+                                   • Ya se restauró el elemento
+
+"JSON corrupto"                   • Usar backups automáticos (backup_*.json)
+                                   • Iniciar sistema nuevo
+
+"Comando no reconocido"           • Escribir help para ver comandos
+                                   • Revisar sintaxis
+
+LOGS Y DEPURACIÓN:
+   • Activar log: log on
+   • Ver archivo: sistema.log
+   • Desactivar: log off
+
+===============================================================================
+8. FORMATO DE ARCHIVOS
+===============================================================================
+
+8.1 ARCHIVO PRINCIPAL (sistema.json)
+{
+  "version": "1.0",
+  "fecha_guardado": "2024-12-15T14:30:22.123456",
+  "next_id": 25,
+  "raiz": {
+    "id": "uuid-root",
+    "nombre": "root",
+    "tipo": "carpeta",
+    "contenido": null,
+    "children": [
+      {
+        "id": "1",
+        "nombre": "documentos",
+        "tipo": "carpeta",
+        "contenido": null,
+        "children": [
+          {
+            "id": "2",
+            "nombre": "notas.txt",
+            "tipo": "archivo",
+            "contenido": "Mis notas",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}
+
+8.2 ARCHIVO PAPELERA (trash.json)
+{
+  "capacidad_maxima": 100,
+  "items": [
+    {
+      "id": "trash-uuid",
+      "nodo": { ... },
+      "ruta_original": "/root/documentos/notas.txt",
+      "fecha_eliminacion": "2024-12-15T14:35:10.123456"
+    }
+  ]
+}
+
+8.3 ARCHIVOS GENERADOS AUTOMÁTICAMENTE
+   • sistema.json        - Datos principales
+   • trash.json          - Papelera
+   • sistema.log         - Log de operaciones (si está activo)
+   • backup_*.json       - Backups automáticos (antes de guardar)
+   • preorden.txt        - Exportación de recorrido
+   • performance_*.txt   - Reportes de pruebas
+
+===============================================================================
+CRÉDITOS Y AGRADECIMIENTOS
+===============================================================================
+
+Desarrollado como proyecto final del curso de Estructuras de Datos.
+
+AGRADECIMIENTOS:
+• Al profesor por la guía y enseñanza
+• A los compañeros de clase por el apoyo
+• A los recursos bibliográficos del curso
+
+LICENCIA:
+Proyecto académico - Para fines educativos
+
+CONTACTO:
+• [Tu correo o información de contacto]
+• [Información del compañero]
